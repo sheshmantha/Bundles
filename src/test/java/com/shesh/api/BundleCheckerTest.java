@@ -37,7 +37,7 @@ public class BundleCheckerTest {
     }
 
     @Test
-    public void props() throws Exception {
+    public void testSimpleMatch() throws Exception {
         new JavaTestKit(actorSystem) {{
             final ActorRef bc = actorSystem.actorOf(BundleChecker.props(myBundle), "bundleChecker1");
             bc.tell(new Messages.MatchBundle(cart.items), getTestActor());

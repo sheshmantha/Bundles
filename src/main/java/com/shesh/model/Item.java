@@ -6,7 +6,11 @@ public class Item {
     float price;
 
     public Item(String name) {
-        this(name, 1, 2.50f);
+        this(name, 1, 1.50f);
+    }
+
+    public Item(String name, int q) {
+        this(name, q, 1.50f);
     }
 
     public Item(String name, int q, float p) {
@@ -20,6 +24,7 @@ public class Item {
         return "Item{" +
                 "product='" + product + '\'' +
                 ", qty=" + qty +
+                ", price=" + price +
                 '}';
     }
 
