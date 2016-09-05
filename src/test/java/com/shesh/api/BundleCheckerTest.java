@@ -115,7 +115,8 @@ public class BundleCheckerTest {
         List<Set<Item>> things = cart.getPowerSet().stream().filter(set -> set.size() > 1).collect(Collectors.toList());
         assert things.size() == 4;
         List<Bundle> bundleDB = new ArrayList<Bundle>(bundles);
-        printBundles("All bundles", bundleDB);
+        Set<Bundle> matchedBundles = new HashSet<>();
+//        printBundles("All bundles", bundleDB);
         things.forEach(set -> {
             System.out.print("Finding Bundles for subset: [ ");
             set.forEach(item -> System.out.print(item.toString() + ", "));
@@ -124,17 +125,18 @@ public class BundleCheckerTest {
                     bundle -> set.containsAll(bundle.items)
             ));
             matches.get(Boolean.TRUE).forEach(bundle -> {
-                System.out.println(bundle);
+//                System.out.println(bundle);
                 bundleDB.remove(bundle);
-                printBundles("Matched", bundleDB);
+                matchedBundles.add(bundle);
+//                printBundles("Matched", bundleDB);
             });
         });
-
+        printBundles("Final matches", matchedBundles);
     }
 
-    private void printBundles(String desc, List<Bundle> blist) {
+    private void printBundles(String desc, Collection<Bundle> coll) {
         System.out.println(desc + ">>>");
-        blist.forEach(bundle -> System.out.println(bundle));
+        coll.forEach(bundle -> System.out.println(bundle));
         System.out.println("<<<" + desc);
     }
 }
