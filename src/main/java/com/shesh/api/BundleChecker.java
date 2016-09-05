@@ -22,7 +22,7 @@ public class BundleChecker extends AbstractActor {
                    cb.set.stream().forEach(item -> {
                        System.out.println(item);
                    });
-                    sender().tell(new Messages.MatchBundleResult(myBundle, cb.set.containsAll(b.items)), self());
+                    sender().tell(new Messages.MatchBundleResult(myBundle, cb.set.containsAll(myBundle.items)), self());
                 })
                 .build()
         );

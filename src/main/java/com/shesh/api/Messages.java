@@ -1,8 +1,10 @@
 package com.shesh.api;
 
 import com.shesh.model.Bundle;
+import com.shesh.model.Cart;
 import com.shesh.model.Item;
 
+import java.util.List;
 import java.util.Set;
 
 public class Messages {
@@ -18,5 +20,19 @@ public class Messages {
         public Bundle bundle;
         public boolean matched = false;
         public MatchBundleResult(Bundle b, boolean foundMatch) { this.bundle = b; matched = foundMatch; }
+    }
+
+    public static class PriceCart {
+        public Cart cart;
+
+        public PriceCart(Cart c) {
+            cart = c;
+        }
+    }
+
+    public static class PriceCartResult {
+        public Cart cart;
+        public List<Bundle> bundles;
+        public float totalPrice;
     }
 }

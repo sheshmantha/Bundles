@@ -4,9 +4,11 @@ import java.util.*;
 
 public class Cart {
     public Set<Item> items;
+    private Set<Set<Item>> ps;
 
     public Cart() {
         items = new HashSet<Item>();
+        ps = null;
     }
 
     public void add(String product, int qty) {
@@ -14,8 +16,11 @@ public class Cart {
     }
 
     public Set<Set<Item>> getPowerSet() {
-        long num = 1L << items.size();
-        return powerset(new ArrayList<Item>(items), num);
+        if (ps == null) {
+            long num = 1L << items.size();
+            ps = powerset(new ArrayList<Item>(items), num);
+        }
+        return ps;
     }
 
     private Set<Set<Item>> powerset(List<Item> list, long num) {
