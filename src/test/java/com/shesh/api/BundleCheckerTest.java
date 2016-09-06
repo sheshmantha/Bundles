@@ -13,7 +13,11 @@ import org.junit.Test;
 import scala.concurrent.duration.Duration;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BundleCheckerTest {
     private static Bundle b1, b2, b3;
@@ -38,6 +42,7 @@ public class BundleCheckerTest {
         cart.items.add(new Item("a", 1, 1.50f));
         cart.items.add(new Item("b", 1, 3.50f));
         cart.items.add(new Item("c", 1, 4.50f));
+        cart.items.add(new Item("e", 1, 14.50f));
 
         b1 = new Bundle("Hello1");
         b1.items.add(new Item("a", 1, 1.50f));
@@ -70,7 +75,7 @@ public class BundleCheckerTest {
                 @Override
                 protected void run() {
                     System.out.println("Bundle: " + result.bundle + " match: " + result.matched);
-                    Assert.assertTrue(result.matched);
+                    assertTrue(result.matched);
                 }
             };
         }};
@@ -132,6 +137,35 @@ public class BundleCheckerTest {
             });
         });
         printBundles("Final matches", matchedBundles);
+    }
+
+    @Test
+    public void testPartitioning2() throws Exception {
+        Set<Bundle> matched = new HashSet<Bundle>();
+        cart.getPowerSet().stream()
+                .filter(set -> set.size() > 1)
+                .forEach(set -> {
+                    matched.addAll(bundles.parallelStream()
+                            .collect(Collectors.partitioningBy(bundle -> set.containsAll(bundle.items)))
+                            .get(Boolean.TRUE));
+                });
+        assert matched.size() == 2;
+        assert matched.containsAll(Arrays.asList(b2, b1));
+        assertFalse(hasNoIntersection(matched));
+        printBundles("matched", matched);
+        Optional<Bundle> cheapest = matched.parallelStream().min((bun1, bun2) -> Float.compare(bun1.getPrice(), bun2.getPrice()));
+        if (cheapest.isPresent()) {
+            System.out.println("Cheapest: " + cheapest.get());
+            Set<Item> remaining = new HashSet<Item>(cart.items);
+            remaining.removeAll(cheapest.get().items);
+            remaining.forEach(item -> System.out.println(item));
+        } else
+            System.out.println("Cheapest not found");
+    }
+
+    private Boolean hasNoIntersection(Set<Bundle> set) {
+        Map<Item, Long> counts = set.stream().flatMap(bundle -> bundle.items.stream()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        return (counts.values().stream().filter(c -> c > 1).count()) == 0;
     }
 
     private void printBundles(String desc, Collection<Bundle> coll) {

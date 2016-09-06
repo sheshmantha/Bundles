@@ -30,9 +30,11 @@ public class Messages {
         }
     }
 
+    /* Arguably this can be a heavy object and result in expensive serialization 'tween actors -- leave for future optimization */
     public static class PriceCartResult {
         public Cart cart;
-        public List<Bundle> bundles;
-        public float totalPrice;
+        public Set<Bundle> matches;
+        public Set<Bundle> picked;
+        public double totalPrice;
     }
 }

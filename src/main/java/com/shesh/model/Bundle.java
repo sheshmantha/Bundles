@@ -19,6 +19,10 @@ public class Bundle {
         this.price = price;
     }
 
+    public float getPrice() {
+        return this.price;
+    }
+
     @Override
     public String toString() {
         return "Bundle:" + name + " {" +

@@ -3,17 +3,17 @@ package com.shesh.model;
 public class Item {
     String product; /* Can be a first class object; use String for simplicity */
     int qty;
-    float price;
+    double price;
 
     public Item(String name) {
-        this(name, 1, 1.50f);
+        this(name, 1, 1.50d);
     }
 
     public Item(String name, int q) {
-        this(name, q, 1.50f);
+        this(name, q, 1.50d);
     }
 
-    public Item(String name, int q, float p) {
+    public Item(String name, int q, double p) {
         product = name;
         qty = q;
         price = p;
@@ -35,15 +35,22 @@ public class Item {
 
         Item item = (Item) o;
 
-        if (qty != item.qty) return false;
+        if (Double.compare(item.price, price) != 0) return false;
         return product != null ? product.equals(item.product) : item.product == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = product != null ? product.hashCode() : 0;
-        result = 31 * result + qty;
+        int result;
+        long temp;
+        result = product != null ? product.hashCode() : 0;
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + qty + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    public double getPrice() {
+        return price;
     }
 }
