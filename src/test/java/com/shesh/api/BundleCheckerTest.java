@@ -153,7 +153,7 @@ public class BundleCheckerTest {
         assert matched.containsAll(Arrays.asList(b2, b1));
         assertFalse(hasNoIntersection(matched));
         printBundles("matched", matched);
-        Optional<Bundle> cheapest = matched.parallelStream().min((bun1, bun2) -> Float.compare(bun1.getPrice(), bun2.getPrice()));
+        Optional<Bundle> cheapest = matched.parallelStream().min((bun1, bun2) -> Double.compare(bun1.getPrice(), bun2.getPrice()));
         if (cheapest.isPresent()) {
             System.out.println("Cheapest: " + cheapest.get());
             Set<Item> remaining = new HashSet<Item>(cart.items);

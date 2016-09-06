@@ -7,7 +7,7 @@ public class Bundle {
     public String name;
     public Set<Item> items;
 
-    private float price;
+    private double price;
 
     public Bundle(String a) {
         name = a;
@@ -15,11 +15,11 @@ public class Bundle {
         price = Integer.MAX_VALUE;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return this.price;
     }
 
