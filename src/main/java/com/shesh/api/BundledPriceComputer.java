@@ -59,7 +59,7 @@ public class BundledPriceComputer extends AbstractActor {
                 });
         if (!hasNoIntersection(matched)) {
             /* some bundles apply */
-            Optional<Bundle> cheapest = matched.parallelStream().min((bun1, bun2) -> Float.compare(bun1.getPrice(), bun2.getPrice()));
+            Optional<Bundle> cheapest = matched.parallelStream().min((bun1, bun2) -> Double.compare(bun1.getPrice(), bun2.getPrice()));
             result.picked = new HashSet<Bundle>();
             if (cheapest.isPresent()) {
                 log.debug("Cheapest: " + cheapest.get());
@@ -75,9 +75,12 @@ public class BundledPriceComputer extends AbstractActor {
             double sum = remaining.parallelStream().mapToDouble(item -> item.getPrice()).sum();
             result.totalPrice = result.picked.parallelStream().mapToDouble(item -> item.getPrice()).sum() + sum;
         } else {
-            /* all bundles apply */
+            /* all bundles apply... unless there are none ;-) */
             result.picked = matched;
-            result.totalPrice = result.picked.parallelStream().mapToDouble(item -> item.getPrice()).sum();
+            if (matched.size() == 0)
+                result.totalPrice = cart.items.parallelStream().mapToDouble(item -> item.getPrice()).sum();
+            else
+                result.totalPrice = result.picked.parallelStream().mapToDouble(item -> item.getPrice()).sum();
         }
         return result;
     }
